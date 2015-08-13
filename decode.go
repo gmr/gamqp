@@ -21,7 +21,16 @@ func decodeBoolean(r io.Reader) (value bool, err error) {
 }
 
 func decodeByteArray(r io.Reader) (value []byte, err error) {
-	return
+	var length uint32
+	err = binary.Read(r, binary.BigEndian, &length)
+	if err != nil {
+		return
+	}
+	bytes := make([]byte, length)
+	if _, err = io.ReadFull(r, bytes); err != nil {
+		return
+	}
+	return bytes, nil
 }
 
 func decodeDecimal(r io.Reader) (value Decimal, err error) {
@@ -29,6 +38,7 @@ func decodeDecimal(r io.Reader) (value Decimal, err error) {
 }
 
 func decodeDouble(r io.Reader) (value float64, err error) {
+	err = binary.Read(r, binary.BigEndian, &value)
 	return
 }
 
@@ -41,34 +51,49 @@ func decodeFieldTable(r io.Reader) (value map[string]interface{}, err error) {
 }
 
 func decodeFloat(r io.Reader) (value float32, err error) {
+	err = binary.Read(r, binary.BigEndian, &value)
 	return
 }
 
-func decodeLongInt(r io.Reader) (value int32, err error) {
+func decodeLongInt(r io.Reader) (value uint32, err error) {
+	err = binary.Read(r, binary.BigEndian, &value)
 	return
 }
 
 func decodeLongString(r io.Reader) (value string, err error) {
-	return
+	var length uint32
+	err = binary.Read(r, binary.BigEndian, &length)
+	if err != nil {
+		return
+	}
+	bytes := make([]byte, length)
+	if _, err = io.ReadFull(r, bytes); err != nil {
+		return
+	}
+	return string(bytes), nil
 }
 
-func decodeLongLongInt(r io.Reader) (value int64, err error) {
+func decodeLongLongInt(r io.Reader) (value uint64, err error) {
+	err = binary.Read(r, binary.BigEndian, &value)
 	return
 }
 
 func decodeOctet(r io.Reader) (value byte, err error) {
+	err = binary.Read(r, binary.BigEndian, &value)
 	return
 }
 
-func decodeShortInt(r io.Reader) (value int16, err error) {
+func decodeShortInt(r io.Reader) (value uint16, err error) {
+	err = binary.Read(r, binary.BigEndian, &value)
 	return
 }
 
 func decodeShortShortInt(r io.Reader) (value int8, err error) {
+	err = binary.Read(r, binary.BigEndian, &value)
 	return
 }
 
-func decodeShortStr(r io.Reader) (value string, err error) {
+func decodeShortString(r io.Reader) (value string, err error) {
 	var length uint8
 	err = binary.Read(r, binary.BigEndian, &length)
 	if err != nil {
@@ -82,5 +107,10 @@ func decodeShortStr(r io.Reader) (value string, err error) {
 }
 
 func decodeTimestamp(r io.Reader) (value time.Time, err error) {
-	return
+	var epoch int64
+	err = binary.Read(r, binary.BigEndian, &epoch)
+	if err != nil {
+		return
+	}
+	return time.Unix(epoch, 0), nil
 }
