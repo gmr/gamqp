@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestBoolean(t *testing.T) {
+func TestDecodeBoolean(t *testing.T) {
 	cases := []struct {
 		in    []byte
 		value bool
@@ -18,18 +18,18 @@ func TestBoolean(t *testing.T) {
 		{[]byte{}, false, io.EOF},
 	}
 	for _, c := range cases {
-		value, err := boolean(bytes.NewReader(c.in))
+		value, err := decodeBoolean(bytes.NewReader(c.in))
 		if err != nil {
 			if err != c.err {
-				t.Errorf("shortStr(%s) == %#v, want %#v", c.in, err, c.err)
+				t.Errorf("decodeBoolean(%s) == %#v, want %#v", c.in, err, c.err)
 			}
 		} else if value != c.value {
-			t.Errorf("boolean(%v) == %t, want %t", c.in, value, c.value)
+			t.Errorf("decodeBoolean(%v) == %t, want %t", c.in, value, c.value)
 		}
 	}
 }
 
-func TestShortStr(t *testing.T) {
+func TestDecodeShortStr(t *testing.T) {
 	cases := []struct {
 		in, value string
 		err       error
@@ -40,7 +40,7 @@ func TestShortStr(t *testing.T) {
 		{"", "", io.EOF},
 	}
 	for _, c := range cases {
-		value, err := shortStr(strings.NewReader(c.in))
+		value, err := decodeShortStr(strings.NewReader(c.in))
 		if err != nil {
 			if err != c.err {
 				t.Errorf("shortStr(%s) == %#v, want %#v", c.in, err, c.err)
