@@ -39,6 +39,7 @@ func TestDecodeByteArray(t *testing.T) {
 		err   error
 	}{
 		{"\000\000\000\003abc", []byte{0x61, 0x62, 0x63}, nil},
+		{"\000\000\000\003", []byte{0x00}, io.EOF},
 		{"", []byte{0x00}, io.EOF},
 	}
 	for _, c := range cases {
