@@ -218,6 +218,28 @@ func TestDecodeShortInt(t *testing.T) {
 	}
 }
 
+func TestDecodeShortShortInt(t *testing.T) {
+	cases := []struct {
+		in    string
+		value uint8
+		err   error
+	}{
+		{"\xfe", 254, nil},
+		{"", 0, io.EOF},
+	}
+	for _, c := range cases {
+		value, err := decodeShortShortInt(strings.NewReader(c.in))
+		if err != nil {
+			if err != c.err {
+				t.Errorf("decodeShortShortInt(%#v) == %#v, want %#v", c.in, err, c.err)
+			}
+		} else {
+			if value != c.value {
+				t.Errorf("decodeShortShortInt(%#v) == %#v, want %#v", c.in, value, c.value)
+			}
+		}
+	}
+}
 func TestDecodeShortString(t *testing.T) {
 	cases := []struct {
 		in, value string

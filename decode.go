@@ -88,7 +88,7 @@ func decodeShortInt(r io.Reader) (value uint16, err error) {
 	return
 }
 
-func decodeShortShortInt(r io.Reader) (value int8, err error) {
+func decodeShortShortInt(r io.Reader) (value uint8, err error) {
 	err = binary.Read(r, binary.BigEndian, &value)
 	return
 }
